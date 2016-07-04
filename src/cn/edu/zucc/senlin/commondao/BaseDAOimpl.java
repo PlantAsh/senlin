@@ -13,10 +13,10 @@ import org.springframework.stereotype.Repository;
 
 @SuppressWarnings("unchecked")
 @Repository("baseDAO")
-public class BaseDAOimpl implements BaseDAO {
+public abstract class BaseDAOimpl<T> implements BaseDAO<T> {
 	
 	private SessionFactory sessionFactory;
-	private Class<Object> entityClass;
+	private Class<T> entityClass;
 	
     public SessionFactory getSessionFactory() {
 		return sessionFactory;
@@ -26,19 +26,24 @@ public class BaseDAOimpl implements BaseDAO {
 		this.sessionFactory = sessionFactory;
 	}
     
-    private Session getCurrent() {
+    public Session getCurrent() {
     	return this.getSessionFactory().getCurrentSession();
     }
+    
+    public BaseDAOimpl() {
+    	Type type = getClass().getGenericSuperclass();
+    	entityClass = (Class<T>) ((ParameterizedType)type).getActualTypeArguments()[0];
+    }
 
-	public void add(Object obj) throws Exception {
+	public void add(T obj) throws Exception {
         try {
         	this.getCurrent().save(obj);
-        } catch (RuntimeException e) {
+        } catch (Exception e) {
             throw e;
         }
     }
     
-    public void delete(Object obj) throws Exception {
+    public void delete(T obj) throws Exception {
         try {
         	this.getCurrent().delete(obj);
         } catch (Exception e) {
@@ -46,7 +51,7 @@ public class BaseDAOimpl implements BaseDAO {
         }
     }
 
-    public void update(Object obj) throws Exception {
+    public void update(T obj) throws Exception {
         try {
         	this.getCurrent().update(obj);
         } catch (Exception e) {
@@ -55,7 +60,7 @@ public class BaseDAOimpl implements BaseDAO {
     }
     
     //根据指定的hql进行查询，并返回查询结果
-    public List<?> findByHQL(String hql) throws Exception {
+    public List<T> findByHQL(String hql) throws Exception {
         try {
             Query queryObject = this.getCurrent().createQuery(hql);
             return queryObject.list();
@@ -66,11 +71,9 @@ public class BaseDAOimpl implements BaseDAO {
     }
 
     //根据指定的实体类型和主键的值，查找实体对象
-	public Object findById(Serializable key) throws Exception {
+	public T findById(Serializable key) throws Exception {
         try {
-        	Type type = getClass().getGenericSuperclass();
-        	entityClass = (Class<Object>) ((ParameterizedType)type).getActualTypeArguments()[0];
-            Object instance = (Object) this.getCurrent().get(entityClass, key);
+            T instance = (T) this.getCurrent().get(entityClass, key);
             return instance;
         } catch (Exception e) {
             throw e;
@@ -78,7 +81,7 @@ public class BaseDAOimpl implements BaseDAO {
     }
 	
 	//根据指定的位置和数量，查找对象
-    public List<?> findByQuantity(String hql,int first,int quantity) throws Exception {
+    public List<T> findByQuantity(String hql,int first,int quantity) throws Exception {
         try {
         	Query queryObject = this.getCurrent().createQuery(hql);
         	queryObject.setFirstResult(first);

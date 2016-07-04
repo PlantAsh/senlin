@@ -34,7 +34,7 @@ public class PostsServiceimpl implements PostsService {
 	public String addPosts(UserPosts userPosts) throws Exception {
 		// TODO Auto-generated method stub
 		try {
-			userPostsDAO.addPosts(userPosts);
+			userPostsDAO.add(userPosts);
 			return "success";
 		} catch (Exception e) {
 			// TODO: handle exception

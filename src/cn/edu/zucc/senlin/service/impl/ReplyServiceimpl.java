@@ -32,7 +32,7 @@ public class ReplyServiceimpl implements ReplyService {
 	public String addPosts(UserReply userReply) throws Exception {
 		// TODO Auto-generated method stub
 		try {
-			userReplyDAO.addReply(userReply);
+			userReplyDAO.add(userReply);
 			return "success";
 		} catch (Exception e) {
 			// TODO: handle exception

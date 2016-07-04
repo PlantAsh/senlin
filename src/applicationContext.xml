@@ -84,7 +84,8 @@
 	
 	<!-- 哪些类的哪些方法参与事务 -->
 	<aop:config>
-		<aop:advisor pointcut="execution(* cn.edu.zucc.senlin.dao.impl.*.*(..))" advice-ref="txAdvice"/>
+		<aop:advisor pointcut="execution(* cn.edu.zucc.senlin.service.impl.*.*(..))" advice-ref="txAdvice"/>
+		<aop:advisor pointcut="execution(* cn.edu.zucc.senlin.service.*.*(..))" advice-ref="txAdvice"/>
 	</aop:config>
 
 			

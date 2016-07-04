@@ -33,11 +33,11 @@ public class UserServiceimpl implements UserService {
 				ActionContext.getContext().getSession().put("error", "’À∫≈“—¥Ê‘⁄");
 				return "error";
 			}
-			userDAO.addUser(user);
+			userDAO.add(user);
 			UserInformation usin = new UserInformation();
 			usin.setUserAccount(user.getUserAccount());
 			usin.setUserName(user.getUserAccount());
-			userInformationDAO.addInformation(usin);
+			userInformationDAO.add(usin);
 			return "success";
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
